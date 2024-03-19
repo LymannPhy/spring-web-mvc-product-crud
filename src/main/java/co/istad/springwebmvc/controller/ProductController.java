@@ -1,8 +1,10 @@
 package co.istad.springwebmvc.controller;
 
+import co.istad.springwebmvc.dto.ProductCreateRequest;
+import co.istad.springwebmvc.dto.ProductEditRequest;
 import co.istad.springwebmvc.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -13,6 +15,19 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
+
+    @PutMapping("/{uuid}")
+    void editProductByUuid(@PathVariable String uuid,
+                           @RequestBody ProductEditRequest request) {
+        productService.editProductByUuid(uuid, request);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    void createNewProduct(@RequestBody ProductCreateRequest request) {
+        System.out.println("REQUEST: " + request);
+        productService.createNewProduct(request);
+    }
 
     @GetMapping
     Map<String, Object> findProducts(@RequestParam(required = false, defaultValue = "") String name,
@@ -38,5 +53,7 @@ public class ProductController {
                 "data", productService.findProductByUuid(uuid)
         );
     }
+
+
 
 }

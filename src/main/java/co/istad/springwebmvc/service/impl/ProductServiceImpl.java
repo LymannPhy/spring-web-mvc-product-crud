@@ -1,6 +1,8 @@
 package co.istad.springwebmvc.service.impl;
 
-import co.istad.springwebmvc.dto.ProductDto;
+import co.istad.springwebmvc.dto.ProductCreateRequest;
+import co.istad.springwebmvc.dto.ProductEditRequest;
+import co.istad.springwebmvc.dto.ProductResponse;
 import co.istad.springwebmvc.model.Product;
 import co.istad.springwebmvc.service.ProductService;
 import org.springframework.stereotype.Service;
@@ -56,11 +58,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findProducts(String name, Boolean status) {
+    public void editProductByUuid(String uuid, ProductEditRequest request) {
+        // Check UUID if exists
+        long count = products.stream()
+                .filter(product -> product.getUuid().equals(uuid))
+                .peek(oldProduct -> {
+                    oldProduct.setName(request.name());
+                    oldProduct.setPrice(request.price());
+                }).count();
+        System.out.println("Affected row = " + count);
+    }
+
+    @Override
+    public void createNewProduct(ProductCreateRequest request) {
+        Product newProduct = new Product();
+        newProduct.setName(request.name());
+        newProduct.setPrice(request.price());
+        newProduct.setQty(request.qty());
+        newProduct.setId(products.size() + 1);
+        newProduct.setUuid(UUID.randomUUID().toString());
+        newProduct.setImportedDate(LocalDateTime.now());
+        newProduct.setStatus(true);
+        products.add(newProduct);
+    }
+
+    @Override
+    public List<ProductResponse> findProducts(String name, Boolean status) {
         return products.stream()
                 .filter(product -> product.getName().toLowerCase()
                         .contains(name.toLowerCase()) && product.getStatus().equals(status))
-                .map(product -> new ProductDto(
+                .map(product -> new ProductResponse(
                         product.getUuid(),
                         product.getName(),
                         product.getPrice(),
@@ -70,11 +97,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductById(Integer id) {
+    public ProductResponse findProductById(Integer id) {
         return products.stream()
                 .filter(product -> product.getId().equals(id) &&
                         product.getStatus().equals(true))
-                .map(product -> new ProductDto(
+                .map(product -> new ProductResponse(
                         product.getUuid(),
                         product.getName(),
                         product.getPrice(),
@@ -85,11 +112,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductByUuid(String uuid) {
+    public ProductResponse findProductByUuid(String uuid) {
         return products.stream()
                 .filter(product -> product.getUuid().equals(uuid) &&
                         product.getStatus().equals(true))
-                .map(product -> new ProductDto(
+                .map(product -> new ProductResponse(
                         product.getUuid(),
                         product.getName(),
                         product.getPrice(),
