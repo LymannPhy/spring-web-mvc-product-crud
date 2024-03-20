@@ -5,14 +5,17 @@ import co.istad.springwebmvc.dto.ProductEditRequest;
 import co.istad.springwebmvc.dto.ProductResponse;
 import co.istad.springwebmvc.model.Product;
 import co.istad.springwebmvc.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private List<Product> products;
@@ -55,6 +58,17 @@ public class ProductServiceImpl implements ProductService {
         products.add(p2);
         products.add(p3);
         products.add(p4);
+    }
+
+    @Override
+    public void deleteProductByUuid(String uuid) {
+
+        products = products.stream()
+                .filter(product -> !product.getUuid().equals(uuid))
+                .collect(Collectors.toList());
+
+        log.info("Affected row: {}", 1);
+
     }
 
     @Override

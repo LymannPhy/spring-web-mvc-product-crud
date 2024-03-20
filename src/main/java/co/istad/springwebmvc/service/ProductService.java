@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ProductService {
 
+    void deleteProductByUuid(String uuid);
+
     void editProductByUuid(String uuid, ProductEditRequest request);
 
     void createNewProduct(ProductCreateRequest request);
