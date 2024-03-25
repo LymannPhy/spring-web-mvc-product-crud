@@ -5,23 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
-@Table(name = "products")
+@Table(name = "categories")
 
-public class Product {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String uuid;
+    @Column(unique = true, nullable = false, length = 40)
     private String name;
-    private Double price;
-    private Integer qty;
-    private LocalDateTime importedDate;
-    private Boolean status;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
 }

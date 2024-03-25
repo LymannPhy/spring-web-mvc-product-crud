@@ -1,22 +1,24 @@
 package co.istad.springwebmvc.service;
-
-import co.istad.springwebmvc.dto.ProductCreateRequest;
-import co.istad.springwebmvc.dto.ProductEditRequest;
-import co.istad.springwebmvc.dto.ProductResponse;
+import co.istad.springwebmvc.dto.*;
 
 import java.util.List;
 
 public interface ProductService {
 
-    void deleteProductByUuid(String uuid);
+    void createNewProduct(ProductCreateRequest request);
+
+    ProductResponse editCategoryById(Integer id, ProductCreateRequest request);
 
     void editProductByUuid(String uuid, ProductEditRequest request);
 
-    void createNewProduct(ProductCreateRequest request);
+    void deleteProductById(Integer id);
 
-    List<ProductResponse> findProducts(String name, Boolean status);
+    ProductResponse findProductByName(String name);
 
     ProductResponse findProductById(Integer id);
 
+    List<ProductResponse> findProducts();
+
     ProductResponse findProductByUuid(String uuid);
+
 }
